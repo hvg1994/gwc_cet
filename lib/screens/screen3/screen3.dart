@@ -1,10 +1,16 @@
+/*
+Api's used:
+
+var logoutUrl = "api/logout";
+
+ */
+
 import 'package:flutter/material.dart';
 import 'package:gwc_cet/controller/auth_controller/auth_controller.dart';
 import 'package:gwc_cet/screens/auth/login.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
-
 import '../../api/api_response.dart';
 import '../../utils/app_config.dart';
 import '../../utils/constants.dart';

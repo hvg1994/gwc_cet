@@ -1,3 +1,26 @@
+/*
+for showing mark as completed, copy, share on whatsapp under registered tab has commented
+uncomment whenever need to show.
+Now we r showing only copy button in a row only
+
+under Transferred tab share on whatsapp button has hided
+
+Api Used:
+
+get CetTeam List Api:
+var getCetTeamDataUrl = "api/getCetTeamData";
+
+markAsCompleted Api:
+var markAsCompleteUrl = "api/updateCetTeamData";
+
+flutter_share_me package used to share on whatsApp
+
+
+
+ */
+
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_share_me/flutter_share_me.dart';
@@ -14,6 +37,7 @@ import '../../utils/widgets/base_class.dart';
 import '../../utils/widgets/no_data_found.dart';
 
 class HomeScreen extends StatelessWidget {
+
   HomeScreen({Key? key}) : super(key: key);
 
   late CetTeamDataController _cetController;
@@ -49,7 +73,7 @@ class HomeScreen extends StatelessWidget {
                 indicatorPadding: EdgeInsets.only(right: 5.w),
                 tabs: const [
                   Text('Registered'),
-                  Text('Transfered'),
+                  Text('Transferred'),
                 ]),
             Expanded(
               child: TabBarView(children: [
@@ -106,13 +130,13 @@ class HomeScreen extends StatelessWidget {
             builder: (_, viewModel, __){
               switch (viewModel.cetTeamDataResponse.status) {
                 case Status.LOADING:
-                  print("MARAJ :: LOADING");
+                  print("STATUS :: LOADING");
                   return LoadingWidget();
                 case Status.ERROR:
-                  print("MARAJ :: ERROR");
+                  print("STATUS :: ERROR");
                   return ErrorWidget(viewModel.cetTeamDataResponse.message ?? "NA");
                 case Status.COMPLETED:
-                  print("MARAJ :: COMPLETED");
+                  print("STATUS :: COMPLETED");
                   List<PendingDetails> _pendingList = (viewModel.cetTeamDataResponse.data as GetCetDataModel).pendingDetails ?? [];
 
                   if(_pendingList.isEmpty){
@@ -126,86 +150,159 @@ class HomeScreen extends StatelessWidget {
                       shrinkWrap: true,
                       itemCount: _pendingList.length,
                       itemBuilder: ((context, index) {
-                        return GestureDetector(
-                          onTap: () {},
-                          child: Column(
-                            children: [
-                              Column(
+                        return Column(
+                          children: [
+                            /// now we r showing only copy button in a row
+                            /// if we need to show all buttons comment this code and uncomment below code
+                            IntrinsicHeight(
+                              child: Row(
                                 mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        _pendingList[index].name ?? '',
-                                        style: fieldTextStyle(),
-                                      ),
-                                      SizedBox(height: 0.5.h),
-                                      Text(
-                                        "${_pendingList[index].age ?? ''} ${_pendingList[index].gender ?? ''}",
-                                        style: fieldTextStyle(),
-                                      ),
-                                      SizedBox(height: 0.5.h),
-                                      Text(
-                                        _pendingList[index].email ?? '',
-                                        style: fieldTextStyle(),
-                                      ),
-                                      SizedBox(height: 0.5.h),
-                                      Text(
-                                        _pendingList[index].phone ?? '',
-                                        style: fieldTextStyle(),
-                                      ),
-                                    ],
+                                  Expanded(
+                                    flex: 3,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          _pendingList[index].name ?? '',
+                                          style: fieldTextStyle(),
+                                        ),
+                                        SizedBox(height: 0.5.h),
+                                        Text(
+                                          "${_pendingList[index].age ?? ''} ${_pendingList[index].gender ?? ''}",
+                                          style: fieldTextStyle(),
+                                        ),
+                                        SizedBox(height: 0.5.h),
+                                        Text(
+                                          _pendingList[index].email ?? '',
+                                          style: fieldTextStyle(),
+                                        ),
+                                        SizedBox(height: 0.5.h),
+                                        Text(
+                                          _pendingList[index].phone ?? '',
+                                          style: fieldTextStyle(),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          showTranferSheet(context, _pendingList[index].userId.toString());
-                                        },
-                                        child: Container(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 1.h, horizontal: 2.w),
-                                          decoration: BoxDecoration(
-                                            // color: gsecondaryColor,
-
-                                              borderRadius: BorderRadius.circular(5),
-                                              border: Border.all(
-                                                  color: gsecondaryColor
-                                              )
-                                          ),
-                                          child: Center(
-                                            child: Row(
-                                              crossAxisAlignment: CrossAxisAlignment.end,
-                                              mainAxisSize: MainAxisSize.min,
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: <Widget>[
-                                                Icon(Icons.check, color: gsecondaryColor, size: 12.sp,),
-                                                Text(
-                                                  'Transfer To Success Team',
-                                                  textAlign: TextAlign.center,
-                                                  style: btnTextStyle(color: gsecondaryColor),
-                                                ),
-                                              ],
-                                            ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      copyToClipboard(context);
+                                    },
+                                    child: IntrinsicHeight(
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 0.8.h, horizontal: 2.w),
+                                        decoration: BoxDecoration(
+                                          // color: gsecondaryColor,
+                                            borderRadius: BorderRadius.circular(5),
+                                            border: Border.all(
+                                                color: gPrimaryColor
+                                            )
+                                        ),
+                                        child: Center(
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            mainAxisSize: MainAxisSize.min,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              Icon(Icons.copy_outlined, color: gPrimaryColor, size: 12.sp,),
+                                              Text(
+                                                'Copy',
+                                                textAlign: TextAlign.center,
+                                                style: btnTextStyle(color: gPrimaryColor),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ),
-                                      SizedBox(
-                                        height: 1.h,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            /// ** ** till here comment
+
+                            // ***   uncomment this when need to show mark as completed, copy, share on whatsapp
+                            /*
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      _pendingList[index].name ?? '',
+                                      style: fieldTextStyle(),
+                                    ),
+                                    SizedBox(height: 0.5.h),
+                                    Text(
+                                      "${_pendingList[index].age ?? ''} ${_pendingList[index].gender ?? ''}",
+                                      style: fieldTextStyle(),
+                                    ),
+                                    SizedBox(height: 0.5.h),
+                                    Text(
+                                      _pendingList[index].email ?? '',
+                                      style: fieldTextStyle(),
+                                    ),
+                                    SizedBox(height: 0.5.h),
+                                    Text(
+                                      _pendingList[index].phone ?? '',
+                                      style: fieldTextStyle(),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        showTranferSheet(context, _pendingList[index].userId.toString());
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 1.h, horizontal: 2.w),
+                                        decoration: BoxDecoration(
+                                          // color: gsecondaryColor,
+
+                                            borderRadius: BorderRadius.circular(5),
+                                            border: Border.all(
+                                                color: gsecondaryColor
+                                            )
+                                        ),
+                                        child: Center(
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            mainAxisSize: MainAxisSize.min,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              Icon(Icons.check, color: gsecondaryColor, size: 12.sp,),
+                                              Text(
+                                                'Transfer To Success Team',
+                                                textAlign: TextAlign.center,
+                                                style: btnTextStyle(color: gsecondaryColor),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                       ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          sendOnWhatsApp(context);
-                                        },
+                                    ),
+                                    SizedBox(
+                                      height: 1.h,
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        copyToClipboard(context);
+                                      },
+                                      child: IntrinsicHeight(
                                         child: Container(
                                           padding: EdgeInsets.symmetric(
-                                              vertical: 1.h, horizontal: 2.w),
+                                              vertical: 0.8.h, horizontal: 2.w),
                                           decoration: BoxDecoration(
                                             // color: gsecondaryColor,
                                               borderRadius: BorderRadius.circular(5),
@@ -219,9 +316,9 @@ class HomeScreen extends StatelessWidget {
                                               mainAxisSize: MainAxisSize.min,
                                               mainAxisAlignment: MainAxisAlignment.center,
                                               children: <Widget>[
-                                                Icon(Icons.share, color: gPrimaryColor, size: 12.sp,),
+                                                Icon(Icons.copy_outlined, color: gPrimaryColor, size: 12.sp,),
                                                 Text(
-                                                  'Send Link',
+                                                  'Copy',
                                                   textAlign: TextAlign.center,
                                                   style: btnTextStyle(color: gPrimaryColor),
                                                 ),
@@ -230,17 +327,53 @@ class HomeScreen extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Container(
-                                height: 1,
-                                margin: EdgeInsets.symmetric(vertical: 1.5.h),
-                                color: Colors.grey.withOpacity(0.3),
-                              ),
-                            ],
-                          ),
+                                    ),
+                                    SizedBox(
+                                      height: 1.h,
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        sendOnWhatsApp(context);
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 1.h, horizontal: 2.w),
+                                        decoration: BoxDecoration(
+                                          // color: gsecondaryColor,
+                                            borderRadius: BorderRadius.circular(5),
+                                            border: Border.all(
+                                                color: gPrimaryColor
+                                            )
+                                        ),
+                                        child: Center(
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            mainAxisSize: MainAxisSize.min,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              Icon(Icons.share, color: gPrimaryColor, size: 12.sp,),
+                                              Text(
+                                                'Send Link',
+                                                textAlign: TextAlign.center,
+                                                style: btnTextStyle(color: gPrimaryColor),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            */
+                            // *** till here
+                            Container(
+                              height: 1,
+                              margin: EdgeInsets.symmetric(vertical: 1.5.h),
+                              color: Colors.grey.withOpacity(0.3),
+                            ),
+                          ],
                         );
                       }),
                     );
@@ -271,13 +404,13 @@ class HomeScreen extends StatelessWidget {
             builder: (_, viewModel, __){
               switch (viewModel.cetTeamDataResponse.status) {
                 case Status.LOADING:
-                  print("MARAJ :: LOADING");
+                  print("STATUS :: LOADING");
                   return LoadingWidget();
                 case Status.ERROR:
-                  print("MARAJ :: ERROR");
+                  print("STATUS :: ERROR");
                   return ErrorWidget(viewModel.cetTeamDataResponse.message ?? "NA");
                 case Status.COMPLETED:
-                  print("MARAJ :: COMPLETED");
+                  print("STATUS :: COMPLETED");
                   List<CompletedDetails> _completedList = (viewModel.cetTeamDataResponse.data as GetCetDataModel).completedDetails ?? [];
 
                   if(_completedList.isEmpty){
@@ -291,128 +424,125 @@ class HomeScreen extends StatelessWidget {
                       shrinkWrap: true,
                       itemCount: _completedList.length,
                       itemBuilder: ((context, index) {
-                        return GestureDetector(
-                          onTap: () {},
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IntrinsicHeight(
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Expanded(
-                                      flex: 3,
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            _completedList[index].name ?? '',
-                                            style: fieldTextStyle(),
-                                          ),
-                                          SizedBox(height: 0.5.h),
-                                          Text(
-                                            "${_completedList[index].age ?? ''} ${_completedList[index].gender ?? ''}",
-                                            style: fieldTextStyle(),
-                                          ),
-                                          SizedBox(height: 0.5.h),
-                                          Text(
-                                            _completedList[index].email ?? '',
-                                            style: fieldTextStyle(),
-                                          ),
-                                          SizedBox(height: 0.5.h),
-                                          Text(
-                                            _completedList[index].phone ?? '',
-                                            style: fieldTextStyle(),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IntrinsicHeight(
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    flex: 3,
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            copyToClipboard(context);
-                                          },
-                                          child: IntrinsicHeight(
-                                            child: Container(
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 0.8.h, horizontal: 2.w),
-                                              decoration: BoxDecoration(
-                                                // color: gsecondaryColor,
-                                                  borderRadius: BorderRadius.circular(5),
-                                                  border: Border.all(
-                                                      color: gPrimaryColor
-                                                  )
-                                              ),
-                                              child: Center(
-                                                child: Row(
-                                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  children: <Widget>[
-                                                    Icon(Icons.copy_outlined, color: gPrimaryColor, size: 12.sp,),
-                                                    Text(
-                                                      'Copy',
-                                                      textAlign: TextAlign.center,
-                                                      style: btnTextStyle(color: gPrimaryColor),
-                                                    ),
-                                                  ],
-                                                ),
+                                        Text(
+                                          _completedList[index].name ?? '',
+                                          style: fieldTextStyle(),
+                                        ),
+                                        SizedBox(height: 0.5.h),
+                                        Text(
+                                          "${_completedList[index].age ?? ''} ${_completedList[index].gender ?? ''}",
+                                          style: fieldTextStyle(),
+                                        ),
+                                        SizedBox(height: 0.5.h),
+                                        Text(
+                                          _completedList[index].email ?? '',
+                                          style: fieldTextStyle(),
+                                        ),
+                                        SizedBox(height: 0.5.h),
+                                        Text(
+                                          _completedList[index].phone ?? '',
+                                          style: fieldTextStyle(),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          copyToClipboard(context);
+                                        },
+                                        child: IntrinsicHeight(
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 0.8.h, horizontal: 2.w),
+                                            decoration: BoxDecoration(
+                                              // color: gsecondaryColor,
+                                                borderRadius: BorderRadius.circular(5),
+                                                border: Border.all(
+                                                    color: gPrimaryColor
+                                                )
+                                            ),
+                                            child: Center(
+                                              child: Row(
+                                                crossAxisAlignment: CrossAxisAlignment.end,
+                                                mainAxisSize: MainAxisSize.min,
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: <Widget>[
+                                                  Icon(Icons.copy_outlined, color: gPrimaryColor, size: 12.sp,),
+                                                  Text(
+                                                    'Copy',
+                                                    textAlign: TextAlign.center,
+                                                    style: btnTextStyle(color: gPrimaryColor),
+                                                  ),
+                                                ],
                                               ),
                                             ),
                                           ),
                                         ),
-                                        // SizedBox(
-                                        //   height: 5,
-                                        // ),
-                                        // GestureDetector(
-                                        //   onTap: () {
-                                        //     sendOnWhatsApp(context);
-                                        //   },
-                                        //   child: IntrinsicHeight(
-                                        //     child: Container(
-                                        //       padding: EdgeInsets.symmetric(
-                                        //           vertical: 1.h, horizontal: 2.w),
-                                        //       decoration: BoxDecoration(
-                                        //         // color: gsecondaryColor,
-                                        //           borderRadius: BorderRadius.circular(5),
-                                        //           border: Border.all(
-                                        //               color: gPrimaryColor
-                                        //           )
-                                        //       ),
-                                        //       child: Center(
-                                        //         child: Row(
-                                        //           crossAxisAlignment: CrossAxisAlignment.end,
-                                        //           mainAxisSize: MainAxisSize.min,
-                                        //           mainAxisAlignment: MainAxisAlignment.center,
-                                        //           children: <Widget>[
-                                        //             Icon(Icons.share, color: gPrimaryColor, size: 12.sp,),
-                                        //             Text(
-                                        //               'Send Link',
-                                        //               textAlign: TextAlign.center,
-                                        //               style: btnTextStyle(color: gPrimaryColor),
-                                        //             ),
-                                        //           ],
-                                        //         ),
-                                        //       ),
-                                        //     ),
-                                        //   ),
-                                        // ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                                      ),
+                                      // SizedBox(
+                                      //   height: 5,
+                                      // ),
+                                      // GestureDetector(
+                                      //   onTap: () {
+                                      //     sendOnWhatsApp(context);
+                                      //   },
+                                      //   child: IntrinsicHeight(
+                                      //     child: Container(
+                                      //       padding: EdgeInsets.symmetric(
+                                      //           vertical: 1.h, horizontal: 2.w),
+                                      //       decoration: BoxDecoration(
+                                      //         // color: gsecondaryColor,
+                                      //           borderRadius: BorderRadius.circular(5),
+                                      //           border: Border.all(
+                                      //               color: gPrimaryColor
+                                      //           )
+                                      //       ),
+                                      //       child: Center(
+                                      //         child: Row(
+                                      //           crossAxisAlignment: CrossAxisAlignment.end,
+                                      //           mainAxisSize: MainAxisSize.min,
+                                      //           mainAxisAlignment: MainAxisAlignment.center,
+                                      //           children: <Widget>[
+                                      //             Icon(Icons.share, color: gPrimaryColor, size: 12.sp,),
+                                      //             Text(
+                                      //               'Send Link',
+                                      //               textAlign: TextAlign.center,
+                                      //               style: btnTextStyle(color: gPrimaryColor),
+                                      //             ),
+                                      //           ],
+                                      //         ),
+                                      //       ),
+                                      //     ),
+                                      //   ),
+                                      // ),
+                                    ],
+                                  ),
+                                ],
                               ),
-                              Container(
-                                height: 1,
-                                margin: EdgeInsets.symmetric(vertical: 1.5.h),
-                                color: Colors.grey.withOpacity(0.3),
-                              ),
-                            ],
-                          ),
+                            ),
+                            Container(
+                              height: 1,
+                              margin: EdgeInsets.symmetric(vertical: 1.5.h),
+                              color: Colors.grey.withOpacity(0.3),
+                            ),
+                          ],
                         );
                       }),
                     );

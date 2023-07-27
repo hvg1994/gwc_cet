@@ -53,12 +53,12 @@ class AuthRepoImp implements AuthRepo{
   //   try {
   //     dynamic response = await _apiService.getResponse(
   //         loginUrl);
-  //     print("MARAJ $response");
+  //     print("STATUS $response");
   //     // final jsonData = MoviesMain.fromJson(response);
   //     // return jsonData;
   //   } catch (e) {
   //     throw e;
-  //     print("MARAJ-E $e}");
+  //     print("STATUS-E $e}");
   //   }
   // }
 

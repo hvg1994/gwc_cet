@@ -1,16 +1,3 @@
-/*
-1. check for the enquiry status api
-2. if status: 0 sitback screen
-3. else status: 1 => than we need to check for is already login or not
- if not login need to show existing user screen else
-4. Need to check for evaluation status(EVAL_STATUS) which will be stored when user login
-if already login we will get from local storage else its null
-5. if eval status is there than we are showing dashboard screen else evaluation screen
-
-API's used in this screen:
-1. EnquiryStatus API
- */
-
 import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -44,16 +31,10 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
   Timer? _timer;
 
   bool isLogin = false;
-  String? evalStatus;
 
   final _pref = AppConfig().preferences!;
 
   String? deviceId;
-
-  /// by default status is 1
-  /// 1 existing user screen
-  /// 0 sitback screen
-  int? enquiryStatus;
 
   bool isError = false;
 
@@ -77,7 +58,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     getDeviceId();
     super.initState();
     runAllAsync();
-    // firebaseNotif();
+    firebaseNotif();
   }
 
 
@@ -125,6 +106,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
   late FirebaseMessaging messaging;
 
   static final _notificationsPlugin = FlutterLocalNotificationsPlugin();
+
   firebaseNotif() async{
     final initializationSettings = InitializationSettings(
       android: AndroidInitializationSettings("@mipmap/ic_launcher"),
@@ -310,6 +292,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     );
   }
 
+  /// alert box when there is a new update
   showAppUpdateAlert(){
     return openAlertBox(
         context: context,

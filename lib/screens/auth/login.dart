@@ -1,3 +1,10 @@
+/*
+Api used:
+var loginUrl = "api/login";
+
+
+ */
+
 import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -380,13 +387,13 @@ class _LoginScreenState extends State<LoginScreen> {
 //Consumer<MoviesListVM>(builder: (context, viewModel, _) {
 //           switch (viewModel.movieMain.status) {
 //             case Status.LOADING:
-//               print("MARAJ :: LOADING");
+//               print("STATUS :: LOADING");
 //               return LoadingWidget();
 //             case Status.ERROR:
-//               print("MARAJ :: ERROR");
+//               print("STATUS :: ERROR");
 //               return MyErrorWidget(viewModel.movieMain.message ?? "NA");
 //             case Status.COMPLETED:
-//               print("MARAJ :: COMPLETED");
+//               print("STATUS :: COMPLETED");
 //               return _getMoviesListView(viewModel.movieMain.data?.movies);
 //             default:
 //           }
